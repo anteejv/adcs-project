@@ -1,0 +1,18 @@
+---
+- hosts: application_nodes
+  become: yes
+  roles:
+    - jre
+    - telegraf
+  
+- hosts: web_nodes
+  become: yes
+  roles:
+    - nginx
+   # - letsencrypt
+    
+- hosts: stats_nodes
+  become: yes
+  roles:
+    - influxdb
+    - grafana

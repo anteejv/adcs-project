@@ -1,0 +1,29 @@
+---    
+- name: "Install jre"
+  yum:
+    name: "{{java_packages}}"
+    state: present
+- name: "Add user"
+  user:
+    name: "{{app_user}}"
+- file:
+    path: /opt/digital-commerce
+    state: directory
+- name: "Copy jar to server"
+  copy:
+    src: /home/ec2-user/environment/201626/digital-commerce/target/digital-commerce-1.0-SNAPSHOT.jar
+    dest: "{{app_full_path}}"
+- name: "Place systemd config"
+  template:
+    src: ../templates/digital-commerce.service
+    dest: /etc/systemd/system/digital-commerce.service
+- name: "Reload systemd"
+  systemd:
+    name: digital-commerce
+    state: restarted
+    daemon_reload: yes
+- name: "Start"
+  service:
+    name: digital-commerce
+    enabled: yes
+    state: started

@@ -1,0 +1,47 @@
+---
+- name: "Install grafana"
+  yum:
+    name: "{{grafana_url}}"
+    state: present
+    
+- name: "Copy configuration"
+  copy:
+    src: ../templates/grafana.ini
+    dest: /etc/grafana/grafana.ini
+    
+- name: "Restart grafana"
+  service:
+    name: grafana-server
+    state: restarted
+    
+- name: "Create influxdb datasource"
+  grafana_datasource:
+    name: "datasource-influxdb"
+    grafana_url: "http://localhost:8080"
+    grafana_user: "admin"
+    grafana_password: "admin"
+    org_id: "1"
+    ds_type: "influxdb"
+    url: "http://{{metrics_dest_ip}}:8086"
+    database: "metrics"
+    
+- name: "Copy dashboard configuration"
+  copy:
+    src: ../templates/apache.json
+    dest: /tmp/apache.json
+    
+- name: "Create apache dashboard"
+  grafana_dashboard:
+    grafana_url: "http://localhost:8080"
+    grafana_user: "admin"
+    grafana_password: "admin"
+    state: present
+    uid: "my_dashboard"
+    message: Updated by ansible
+    overwrite: yes
+    path: /tmp/apache.json
+    
+- name: "Restart grafana"
+  service:
+    name: grafana-server
+    state: restarted

@@ -1,0 +1,12 @@
+---
+- name: "Install Certbot"
+  yum:
+    name: python2-certbot-nginx
+
+- name: "Set up Certbot configuration"
+  shell: "certbot -i nginx -d '{{domain_name}}' --nginx -m '{{email_address}}' --agree-tos --redirect"
+  
+- name: "Restart nginx"
+  service:
+    name: nginx
+    state: restarted
