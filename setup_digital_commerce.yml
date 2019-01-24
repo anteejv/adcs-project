@@ -9,7 +9,7 @@
   become: yes
   roles:
     - nginx
-   # - letsencrypt
+    - letsencrypt
     
 - hosts: stats_nodes
   become: yes
