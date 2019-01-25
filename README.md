@@ -1,3 +1,3 @@
 # Computer System Administration Project
 
-This configuration
+This project lets you configure a Java e-commerce application
